@@ -1,7 +1,5 @@
-const Homepage = () => {
-  return (
-    <div className=''>Homepage</div>
-  )
-}
+export const experimental_ppr = true;
 
-export default Homepage
+export default function Homepage() {
+  return <div className="">Homepage</div>;
+}
