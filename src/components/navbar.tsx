@@ -15,7 +15,7 @@ export default function Navbar() {
         </Link>
       </div>
       {/* Center */}
-      <div className="hidden text-sm md:flex">
+      <div className="hidden w-[50%] items-center justify-between text-sm md:flex">
         <div className="flex gap-6 text-gray-600">
           <Link href={"/"} className="flex items-center gap-2">
             <Image
@@ -47,6 +47,14 @@ export default function Navbar() {
             />
             <span>Stories</span>
           </Link>
+        </div>
+        <div className="hidden items-center rounded-xl bg-slate-100 p-2 xl:flex">
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full bg-transparent text-sm outline-none"
+          />
+          <Image src={"/search.png"} alt="" width={16} height={16} />
         </div>
       </div>
       {/* Right */}
@@ -81,7 +89,6 @@ export default function Navbar() {
             </div>
           </SignedOut>
         </ClerkLoaded>
-
         <MobileMenu />
       </div>
     </div>
