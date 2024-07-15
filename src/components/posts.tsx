@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Comments from "./comments";
 
 export default function Post() {
   return (
@@ -20,7 +21,7 @@ export default function Post() {
         <Image src={"/more.png"} alt="" width={16} height={16} />
       </div>
       {/* Content */}
-      <div className="felx flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <div className="relative min-h-96 w-full">
           <Image
             src={
@@ -45,7 +46,7 @@ export default function Post() {
         </p>
       </div>
       {/* Actions */}
-      <div className="mt-2 flex items-center justify-between text-sm">
+      <div className="my-4 flex items-center justify-between text-sm">
         <div className="flex gap-8">
           <div className="flex items-center gap-2 rounded-xl bg-slate-200 p-2">
             <Image
@@ -90,6 +91,7 @@ export default function Post() {
           </div>
         </div>
       </div>
+      <Comments />
     </div>
   );
 }
