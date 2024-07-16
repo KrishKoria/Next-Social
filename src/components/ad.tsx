@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "./ui/button";
 
 export default function Ad({ size }: { size: "sm" | "md" | "lg" }) {
