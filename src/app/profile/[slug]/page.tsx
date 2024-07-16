@@ -6,7 +6,7 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
   return (
     <div className="flex gap-6 pt-6">
       <div className="hidden w-[20%] xl:block">
-        <LeftMenu />
+        <LeftMenu type="profile" />
       </div>
       <div className="w-full lg:w-[70%] xl:w-[50%]">
         <div className="flex flex-col gap-6">
