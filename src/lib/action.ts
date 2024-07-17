@@ -82,3 +82,62 @@ export async function switchBlockUnblock(userId: string) {
     throw new Error("Something went wrong!");
   }
 }
+
+export async function acceptFollowRequest(userId: string) {
+  const { userId: currentuserId } = auth();
+  if (!currentuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const existingFollowRequest = await prisma.followRequest.findFirst({
+      where: {
+        senderId: userId,
+        receiverId: currentuserId,
+      },
+    });
+    if (existingFollowRequest) {
+      await prisma.followRequest.delete({
+        where: {
+          id: existingFollowRequest.id,
+        },
+      });
+      await prisma.follow.create({
+        data: {
+          followerId: userId,
+          followingId: currentuserId,
+        },
+      });
+    } else {
+      throw new Error("Follow request not found");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Something went wrong!");
+  }
+}
+export async function rejectFollowRequest(userId: string) {
+  const { userId: currentuserId } = auth();
+  if (!currentuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const existingFollowRequest = await prisma.followRequest.findFirst({
+      where: {
+        senderId: userId,
+        receiverId: currentuserId,
+      },
+    });
+    if (existingFollowRequest) {
+      await prisma.followRequest.delete({
+        where: {
+          id: existingFollowRequest.id,
+        },
+      });
+    } else {
+      throw new Error("Follow request not found");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Something went wrong!");
+  }
+}
