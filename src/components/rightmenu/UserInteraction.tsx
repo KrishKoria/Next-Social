@@ -1,5 +1,7 @@
 "use client";
+import { switchFollowUnfollow } from "@/lib/action";
 import { Button } from "../ui/button";
+import { useOptimistic, useState } from "react";
 
 export default function UserInteraction({
   userId,
@@ -14,13 +16,42 @@ export default function UserInteraction({
   isUserFollowing: boolean;
   isRequestSent: boolean;
 }) {
+  const [userState, setUserState] = useState({
+    following: isUserFollowing,
+    blocked: isUserBlocked,
+    request: isRequestSent,
+  });
+  async function follow() {
+    try {
+      switchOptimisticFollow("");
+      await switchFollowUnfollow(userId);
+      setUserState((prevState) => ({
+        ...prevState,
+        following: prevState.following && false,
+        request: !prevState.following && !prevState.request ? true : false,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const [optimisticFollow, switchOptimisticFollow] = useOptimistic(
+    userState,
+    (state) => {
+      return {
+        ...state,
+        following: state.following && false,
+        request: !state.following && !state.request ? true : false,
+      };
+    },
+  );
   return (
     <>
-      <form>
+      <form action={follow}>
         <Button className="w-full rounded-md bg-blue-500 text-sm text-white">
-          {isUserFollowing
+          {optimisticFollow.following
             ? "Unfollow"
-            : isRequestSent
+            : optimisticFollow.request
               ? "Requested"
               : "Follow"}
         </Button>
@@ -30,7 +61,7 @@ export default function UserInteraction({
           variant={"link"}
           className="cursor-pointer text-xs text-red-600"
         >
-          {isUserBlocked ? "Unblock" : "Block"} User
+          {optimisticFollow.blocked ? "Unblock" : "Block"} User
         </Button>
       </form>
     </>
