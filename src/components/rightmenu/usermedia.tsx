@@ -1,8 +1,21 @@
+import prisma from "@/lib/client";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function UserMedia({ user }: { user?: User }) {
+export default async function UserMedia({ user }: { user: User }) {
+  const postsWithMedia = await prisma.post.findMany({
+    where: {
+      userId: user.id,
+      image: {
+        not: null,
+      },
+    },
+    take: 12,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   return (
     <div className="flex flex-col gap-4 rounded-lg bg-white p-4 text-sm shadow-md">
       <div className="flex items-center justify-between font-medium">
@@ -12,126 +25,18 @@ export default function UserMedia({ user }: { user?: User }) {
         </Link>
       </div>
       <div className="flex flex-wrap justify-between gap-4">
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
-        <div className="relative h-24 w-1/5">
-          <Image
-            src={
-              "https://images.pexels.com/photos/14350470/pexels-photo-14350470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }
-            alt=""
-            fill
-            className="rounded-md object-cover"
-          ></Image>
-        </div>
+        {postsWithMedia.length
+          ? postsWithMedia.map((post) => (
+              <div className="relative h-24 w-1/5" key={post.id}>
+                <Image
+                  src={post.image!}
+                  alt=""
+                  fill
+                  className="rounded-md object-cover"
+                />
+              </div>
+            ))
+          : "No Media Found"}
       </div>
     </div>
   );

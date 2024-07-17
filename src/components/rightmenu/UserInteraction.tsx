@@ -5,13 +5,11 @@ import { useOptimistic, useState } from "react";
 
 export default function UserInteraction({
   userId,
-  currentUserId,
   isUserBlocked,
   isUserFollowing,
   isRequestSent,
 }: {
   userId: string;
-  currentUserId: string;
   isUserBlocked: boolean;
   isUserFollowing: boolean;
   isRequestSent: boolean;
