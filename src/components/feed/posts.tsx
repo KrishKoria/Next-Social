@@ -49,7 +49,7 @@ export default function Post({ post }: { post: PostProps }) {
         likes={post.likes.map((like) => like.userId)}
         comments={post._count.Comment}
       />
-      <Comments />
+      <Comments postId={post.id} />
     </div>
   );
 }
