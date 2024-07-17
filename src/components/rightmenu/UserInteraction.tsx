@@ -1,5 +1,5 @@
 "use client";
-import { switchFollowUnfollow } from "@/lib/action";
+import { switchBlockUnblock, switchFollowUnfollow } from "@/lib/action";
 import { Button } from "../ui/button";
 import { useOptimistic, useState } from "react";
 
@@ -23,7 +23,7 @@ export default function UserInteraction({
   });
   async function follow() {
     try {
-      switchOptimisticFollow("");
+      switchoptimisticState("follow");
       await switchFollowUnfollow(userId);
       setUserState((prevState) => ({
         ...prevState,
@@ -35,33 +35,51 @@ export default function UserInteraction({
     }
   }
 
-  const [optimisticFollow, switchOptimisticFollow] = useOptimistic(
+  async function block() {
+    try {
+      switchoptimisticState("block");
+      await switchBlockUnblock(userId);
+      setUserState((prevState) => ({
+        ...prevState,
+        blocked: !prevState.blocked,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const [optimisticState, switchoptimisticState] = useOptimistic(
     userState,
-    (state) => {
-      return {
-        ...state,
-        following: state.following && false,
-        request: !state.following && !state.request ? true : false,
-      };
+    (
+      state,
+      value: "follow" | "block",
+    ): { following: boolean; blocked: boolean; request: boolean } => {
+      return value === "follow"
+        ? {
+            ...state,
+            following: state.following && false,
+            request: !state.following && !state.request ? true : false,
+          }
+        : { ...state, blocked: !state.blocked };
     },
   );
   return (
     <>
       <form action={follow}>
         <Button className="w-full rounded-md bg-blue-500 text-sm text-white">
-          {optimisticFollow.following
+          {optimisticState.following
             ? "Unfollow"
-            : optimisticFollow.request
+            : optimisticState.request
               ? "Requested"
               : "Follow"}
         </Button>
       </form>
-      <form className="self-center">
+      <form className="self-center" action={block}>
         <Button
           variant={"link"}
           className="cursor-pointer text-xs text-red-600"
         >
-          {optimisticFollow.blocked ? "Unblock" : "Block"} User
+          {optimisticState.blocked ? "Unblock" : "Block"} User
         </Button>
       </form>
     </>

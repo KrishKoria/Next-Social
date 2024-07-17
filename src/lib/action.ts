@@ -50,3 +50,35 @@ export async function switchFollowUnfollow(userId: string) {
     throw new Error("Something went wrong!");
   }
 }
+
+export async function switchBlockUnblock(userId: string) {
+  const { userId: currentuserId } = auth();
+  if (!currentuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const existingBlock = await prisma.block.findFirst({
+      where: {
+        blockerId: currentuserId,
+        blockedId: userId,
+      },
+    });
+    if (existingBlock) {
+      await prisma.block.delete({
+        where: {
+          id: existingBlock.id,
+        },
+      });
+    } else {
+      await prisma.block.create({
+        data: {
+          blockerId: currentuserId,
+          blockedId: userId,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Something went wrong!");
+  }
+}
