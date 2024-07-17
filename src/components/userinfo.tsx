@@ -8,8 +8,36 @@ import {
 } from "./ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { User } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/client";
 
-export default function UserInfo({ userId }: { userId?: string }) {
+export default async function UserInfo({ user }: { user: User }) {
+  const createdDate = new Date(user.createdAt);
+  const formattedDate = createdDate.toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  let isBlocked = false;
+  let isFollowing = false;
+  let isFollowingRequestSent = false;
+
+  const { userId: currentuserId } = auth();
+  if (currentuserId) {
+    const blockres = await prisma.block.findFirst({
+      where: { blockerId: currentuserId, blockedId: user.id },
+    });
+    isBlocked = blockres ? true : false;
+    const followres = await prisma.follow.findFirst({
+      where: { followerId: currentuserId, followingId: user.id },
+    });
+    isFollowing = followres ? true : false;
+    const followrequestres = await prisma.followRequest.findFirst({
+      where: { senderId: currentuserId, receiverId: user.id },
+    });
+    isFollowingRequestSent = followrequestres ? true : false;
+  }
   return (
     <Card className="rounded-lg bg-white shadow-md">
       <CardHeader>
@@ -25,55 +53,66 @@ export default function UserInfo({ userId }: { userId?: string }) {
         </CardTitle>
         <div className="flex flex-col gap-2 text-gray-500">
           <div className="flex items-center gap-1">
-            <span className="text-xl text-black">Ava Addams</span>
-            <span className="text-sm">@Ava_Addams</span>
+            <span className="text-xl text-black">
+              {user.firstname && user.lastname
+                ? user.firstname + " " + user.lastname
+                : user.username}
+            </span>
+            <span className="text-sm">@{user.username}</span>
           </div>
-          <p className="text-sm">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias,
-            nisi velit animi tempora voluptas quidem ipsum est officia quibusdam
-            facilis ab aut dolorem quaerat earum.
-          </p>
+          {user.description && <p className="text-sm">{user.description}</p>}
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 text-gray-500">
-        <div className="flex items-center gap-2">
-          <Image src={"/map.png"} alt="" width={16} height={16} />
-          <span className="text-sm">
-            Living in <b>Florida</b>
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Image src={"/school.png"} alt="" width={16} height={16} />
-          <span className="text-sm">
-            Went to <b>Pornhub High School</b>
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Image src={"/work.png"} alt="" width={16} height={16} />
-          <span className="text-sm">
-            Works at <b>Pornhub</b>
-          </span>
-        </div>
+        {user.city && (
+          <div className="flex items-center gap-2">
+            <Image src={"/map.png"} alt="" width={16} height={16} />
+            <span className="text-sm">
+              Living in <b>{user.city}</b>
+            </span>
+          </div>
+        )}
+        {user.school && (
+          <div className="flex items-center gap-2">
+            <Image src={"/school.png"} alt="" width={16} height={16} />
+            <span className="text-sm">
+              Went to <b>{user.school}</b>
+            </span>
+          </div>
+        )}
+        {user.work && (
+          <div className="flex items-center gap-2">
+            <Image src={"/work.png"} alt="" width={16} height={16} />
+            <span className="text-sm">
+              Works at <b>{user.work}</b>
+            </span>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="justify-between">
-        <div className="flex items-center gap-1">
-          <Image src={"/link.png"} alt="" width={16} height={16} />
-          <Link href="/" className="text-sm font-medium text-blue-500">
-            avaaddams.com
-          </Link>
-        </div>
+        {user.website && (
+          <div className="flex items-center gap-1">
+            <Image src={"/link.png"} alt="" width={16} height={16} />
+            <Link href="/" className="text-sm font-medium text-blue-500">
+              {user.website}
+            </Link>
+          </div>
+        )}
         <div className="flex items-center gap-1">
           <Image src={"/date.png"} alt="" width={16} height={16} />
-          <span className="text-sm">Joined July 2024</span>
+          <span className="text-sm text-gray-500">Joined {formattedDate}</span>
         </div>
       </CardFooter>
       <div className="mx-6 flex flex-col">
         <Button className="rounded-md bg-blue-500 text-sm text-white">
           Follow
         </Button>
-        <span className="cursor-pointer self-end p-4 text-xs text-red-600">
+        <Button
+          variant={"destructive"}
+          className="cursor-pointer self-end p-4 text-xs text-red-600"
+        >
           Block User
-        </span>
+        </Button>
       </div>
     </Card>
   );

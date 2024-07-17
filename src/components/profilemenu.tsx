@@ -1,22 +1,39 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import prisma from "@/lib/client";
+import { auth } from "@clerk/nextjs/server";
 
-export default function ProfileMenu() {
+export default async function ProfileMenu() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return null;
+  }
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+    include: {
+      _count: {
+        select: { followers: true },
+      },
+    },
+  });
+  console.log(user);
+  if (!user) {
+    return null;
+  }
   return (
     <div className="flex flex-col gap-6 rounded-lg bg-white p-4 text-sm text-gray-500 shadow-md">
       <div className="relative h-20">
         <Image
-          src={
-            "https://images.pexels.com/photos/12613874/pexels-photo-12613874.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          }
+          src={user.cover || "/noCover.png"}
           alt=""
           fill
           className="rounded-md object-cover"
         />
         <Image
-          src={
-            "https://images.pexels.com/photos/20343642/pexels-photo-20343642/free-photo-of-a-young-woman-standing-next-to-a-parked-motor-scooter.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          }
+          src={user.avatar || "/noAvatar.png"}
           alt=""
           width={48}
           height={48}
@@ -24,7 +41,11 @@ export default function ProfileMenu() {
         />
       </div>
       <div className="flex h-20 flex-col items-center gap-2">
-        <span className="font-semibold">Ava Addams</span>
+        <span className="font-semibold">
+          {user.firstname && user.lastname
+            ? user.firstname + " " + user.lastname
+            : user.username}
+        </span>
         <div className="flex items-center gap-4">
           <div className="flex">
             <Image
@@ -55,7 +76,7 @@ export default function ProfileMenu() {
               className="h-3 w-3 rounded-full object-cover"
             />
           </div>
-          <span className="text-xs text-gray-500">500 Followers</span>
+          <span className="text-xs text-gray-500">{user._count.followers}</span>
         </div>
         <Button className="rounded-md bg-blue-500 p-2 text-xs text-white">
           My Profile

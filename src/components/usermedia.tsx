@@ -1,7 +1,8 @@
+import { User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function UserMedia({ userId }: { userId?: string }) {
+export default function UserMedia({ user }: { user?: User }) {
   return (
     <div className="flex flex-col gap-4 rounded-lg bg-white p-4 text-sm shadow-md">
       <div className="flex items-center justify-between font-medium">
