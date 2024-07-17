@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ProfileMenu from "./profilemenu";
 import Image from "next/image";
-import Ad from "./ad";
+import Ad from "../ad";
 
 export default function LeftMenu({ type }: { type: "home" | "profile" }) {
   return (

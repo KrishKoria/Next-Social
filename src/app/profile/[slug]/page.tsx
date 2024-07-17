@@ -1,6 +1,6 @@
-import Feed from "@/components/Feed";
-import LeftMenu from "@/components/leftmenu";
-import RightMenu from "@/components/rightmenu";
+import Feed from "@/components/feed/Feed";
+import LeftMenu from "@/components/leftmenu/leftmenu";
+import RightMenu from "@/components/rightmenu/rightmenu";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";

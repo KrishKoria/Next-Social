@@ -5,12 +5,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { User } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/client";
+import UserInteraction from "./UserInteraction";
 
 export default async function UserInfo({ user }: { user: User }) {
   const createdDate = new Date(user.createdAt);
@@ -104,15 +105,13 @@ export default async function UserInfo({ user }: { user: User }) {
         </div>
       </CardFooter>
       <div className="mx-6 flex flex-col">
-        <Button className="rounded-md bg-blue-500 text-sm text-white">
-          Follow
-        </Button>
-        <Button
-          variant={"destructive"}
-          className="cursor-pointer self-end p-4 text-xs text-red-600"
-        >
-          Block User
-        </Button>
+        <UserInteraction
+          userId={user.id}
+          currentUserId={currentuserId!}
+          isUserBlocked={isBlocked}
+          isUserFollowing={isFollowing}
+          isRequestSent={isFollowingRequestSent}
+        />
       </div>
     </Card>
   );

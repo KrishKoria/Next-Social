@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 
@@ -19,7 +19,7 @@ export default async function ProfileMenu() {
       },
     },
   });
-  console.log(user);
+  // console.log(user);
   if (!user) {
     return null;
   }

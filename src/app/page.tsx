@@ -1,7 +1,7 @@
 import AddPosts from "@/components/addPosts";
-import Feed from "@/components/Feed";
-import LeftMenu from "@/components/leftmenu";
-import RightMenu from "@/components/rightmenu";
+import Feed from "@/components/feed/Feed";
+import LeftMenu from "@/components/leftmenu/leftmenu";
+import RightMenu from "@/components/rightmenu/rightmenu";
 import Stories from "@/components/stories";
 
 export default function Homepage() {
