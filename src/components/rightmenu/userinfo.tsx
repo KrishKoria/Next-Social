@@ -49,7 +49,7 @@ export default async function UserInfo({ user }: { user: User }) {
               User Information
             </span>
             {currentuserId === user.id ? (
-              <UpdateUser />
+              <UpdateUser user={user} />
             ) : (
               <Link href="/" className="text-xs text-blue-500">
                 See all
