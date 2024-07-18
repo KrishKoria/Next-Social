@@ -1,6 +1,5 @@
 "use client";
 import { switchBlockUnblock, switchFollowUnfollow } from "@/lib/action";
-import { Button } from "../ui/button";
 import { useOptimistic, useState } from "react";
 
 export default function UserInteraction({
@@ -64,21 +63,18 @@ export default function UserInteraction({
   return (
     <>
       <form action={follow}>
-        <Button className="w-full rounded-md bg-blue-500 text-sm text-white">
+        <button className="w-full rounded-md bg-blue-500 text-sm text-white">
           {optimisticState.following
             ? "Unfollow"
             : optimisticState.request
               ? "Requested"
               : "Follow"}
-        </Button>
+        </button>
       </form>
       <form className="self-center" action={block}>
-        <Button
-          variant={"link"}
-          className="cursor-pointer text-xs text-red-600"
-        >
+        <button className="cursor-pointer text-xs text-red-600">
           {optimisticState.blocked ? "Unblock" : "Block"} User
-        </Button>
+        </button>
       </form>
     </>
   );

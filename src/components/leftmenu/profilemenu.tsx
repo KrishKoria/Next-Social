@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Button } from "../ui/button";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -80,9 +79,9 @@ export default async function ProfileMenu() {
           <span className="text-xs text-gray-500">{user._count.followers}</span>
         </div>
         <Link href={`/profile/${user.username}`}>
-          <Button className="rounded-md bg-blue-500 p-2 text-xs text-white">
+          <button className="rounded-md bg-blue-500 p-2 text-xs text-white">
             My Profile
-          </Button>
+          </button>
         </Link>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 export default function Birthdays() {
@@ -20,12 +19,9 @@ export default function Birthdays() {
           <span className="font-semibold">Ava Addams</span>
         </div>
         <div className="flex justify-end gap-3">
-          <Button
-            className="rounded-md bg-blue-500 px-2 py-1 text-xs text-white"
-            variant="default"
-          >
+          <button className="rounded-md bg-blue-500 px-2 py-1 text-xs text-white">
             Celebrate
-          </Button>
+          </button>
         </div>
       </div>
       <div className="flex items-center gap-4 rounded-lg bg-slate-100 p-4">

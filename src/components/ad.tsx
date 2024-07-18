@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { Button } from "./ui/button";
 
 export default function Ad({ size }: { size: "sm" | "md" | "lg" }) {
   return (
@@ -53,12 +52,9 @@ export default function Ad({ size }: { size: "sm" | "md" | "lg" }) {
         </p>
       </CardContent>
       <CardFooter>
-        <Button
-          className="w-full rounded-lg bg-gray-200 text-xs text-gray-500"
-          variant="outline"
-        >
+        <button className="w-full rounded-lg bg-gray-200 text-xs text-gray-500">
           Learn More
-        </Button>
+        </button>
       </CardFooter>
     </Card>
   );

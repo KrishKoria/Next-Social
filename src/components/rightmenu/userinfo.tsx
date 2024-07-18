@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import Image from "next/image";
-import { Button } from "../ui/button";
 import { User } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/client";
