@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "./client";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export async function switchFollowUnfollow(userId: string) {
   const { userId: currentuserId } = auth();
@@ -245,5 +246,90 @@ export async function addComment(postId: string, desc: string) {
   } catch (err) {
     console.log(err);
     throw new Error("Something went wrong!");
+  }
+}
+
+export async function addPost(formData: FormData, image: string) {
+  const desc = formData.get("desc") as string;
+
+  const Desc = z.string().min(1).max(255);
+
+  const validatedDesc = Desc.safeParse(desc);
+
+  if (!validatedDesc.success) {
+    //TODO
+    console.log("description is not valid");
+    return;
+  }
+  const { userId } = auth();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    await prisma.post.create({
+      data: {
+        desc: validatedDesc.data,
+        userId,
+        image,
+      },
+    });
+
+    revalidatePath("/");
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function addStory(image: string) {
+  const { userId } = auth();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    const existingStory = await prisma.stories.findFirst({
+      where: {
+        userId,
+      },
+    });
+
+    if (existingStory) {
+      await prisma.stories.delete({
+        where: {
+          id: existingStory.id,
+        },
+      });
+    }
+    const createdStory = await prisma.stories.create({
+      data: {
+        userId,
+        image,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return createdStory;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function deletePost(postId: string) {
+  const { userId } = auth();
+
+  if (!userId) throw new Error("User is not authenticated!");
+
+  try {
+    await prisma.post.delete({
+      where: {
+        id: postId,
+        userId,
+      },
+    });
+    revalidatePath("/");
+  } catch (err) {
+    console.log(err);
   }
 }

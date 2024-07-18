@@ -1,47 +1,78 @@
-import { useAuth } from "@clerk/nextjs";
+"use client";
+import { useUser } from "@clerk/nextjs";
+import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
+import { useState } from "react";
+import AddPostButton from "./addpostbutton";
+import { addPost } from "@/lib/action";
 
 export default function AddPosts() {
+  const { isLoaded, user } = useUser();
+  const [desc, setDesc] = useState("");
+  const [image, setImage] = useState<any>();
+  if (!isLoaded) {
+    return "Loading...";
+  }
   return (
     <div className="flex justify-between gap-4 rounded-lg bg-white p-4 text-sm shadow-md">
       {/* Avatar */}
       <Image
-        src={
-          "https://images.pexels.com/photos/26632788/pexels-photo-26632788/free-photo-of-a-woman-in-a-white-dress-standing-in-a-field.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-        }
-        alt=""
+        src={user?.imageUrl || "/noAvatar.png"}
+        alt="user avatar"
         className="h-12 w-12 rounded-full object-cover"
         width={48}
         height={48}
       />
       {/* Post */}
       <div className="flex-1">
-        <div className="flex gap-4">
+        <form
+          action={(formdata) => addPost(formdata, image?.secure_url || "")}
+          className="flex gap-4"
+        >
           <textarea
-            name=""
-            id=""
+            name="desc"
             className="flex-1 rounded-lg bg-slate-100 p-2"
             placeholder="Whats on your mind..."
+            onChange={(e) => setDesc(e.target.value)}
           ></textarea>
-          <Image
-            src={"/emoji.png"}
-            alt=""
-            className="h-5 w-5 cursor-pointer self-end"
-            width={20}
-            height={20}
-          />
-        </div>
-        <div className="mt-4 flex flex-wrap items-center gap-4 text-gray-400">
-          <div className="flex cursor-pointer items-center gap-2">
+          <div className="">
             <Image
-              src={"/addimage.png"}
-              alt=""
+              src={"/emoji.png"}
+              alt="add emoji"
               className="h-5 w-5 cursor-pointer self-end"
               width={20}
               height={20}
             />
-            Photos
+            <AddPostButton />
           </div>
+        </form>
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-gray-400">
+          <CldUploadWidget
+            uploadPreset="social"
+            onSuccess={(result, { widget }) => {
+              setImage(result.info);
+              widget.close();
+            }}
+          >
+            {({ open }) => {
+              return (
+                <div
+                  className="flex cursor-pointer items-center gap-2"
+                  onClick={() => open()}
+                >
+                  <Image
+                    src={"/addimage.png"}
+                    alt=""
+                    className="h-5 w-5 cursor-pointer self-end"
+                    width={20}
+                    height={20}
+                  />
+                  Photos
+                </div>
+              );
+            }}
+          </CldUploadWidget>
+
           <div className="flex cursor-pointer items-center gap-2">
             <Image
               src={"/addVideo.png"}
