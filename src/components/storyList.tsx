@@ -104,7 +104,7 @@ export default function StoryList({
           key={story.id}
         >
           <Image
-            src={story.user.avatar || "/noAvatar.png"}
+            src={story.image || "/noAvatar.png"}
             alt=""
             width={80}
             height={80}

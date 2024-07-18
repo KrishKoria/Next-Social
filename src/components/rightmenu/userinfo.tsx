@@ -99,7 +99,10 @@ export default async function UserInfo({ user }: { user: User }) {
         {user.website && (
           <div className="flex items-center gap-1">
             <Image src={"/link.png"} alt="" width={16} height={16} />
-            <Link href="/" className="text-sm font-medium text-blue-500">
+            <Link
+              href={user.website}
+              className="text-sm font-medium text-blue-500"
+            >
               {user.website}
             </Link>
           </div>
