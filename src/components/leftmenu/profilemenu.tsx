@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import prisma from "@/lib/client";
 import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 
 export default async function ProfileMenu() {
   const { userId } = auth();
@@ -78,9 +79,11 @@ export default async function ProfileMenu() {
           </div>
           <span className="text-xs text-gray-500">{user._count.followers}</span>
         </div>
-        <Button className="rounded-md bg-blue-500 p-2 text-xs text-white">
-          My Profile
-        </Button>
+        <Link href={`/profile/${user.username}`}>
+          <Button className="rounded-md bg-blue-500 p-2 text-xs text-white">
+            My Profile
+          </Button>
+        </Link>
       </div>
     </div>
   );
